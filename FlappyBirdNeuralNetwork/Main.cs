@@ -1,26 +1,18 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 // using Neuron;
 namespace FlappyBirdNeuralNetwork{
     class Program{
         static void Main(string[] args){
-            Console.WriteLine("Hello World!");
 
+            List<Neuron> arr = new List<Neuron>();
+            arr.Add(new Neuron((float) 1.5));
+            arr.Add(new Neuron((float) 1.7));
+            arr.Add(null);
+            
+            for(int i = 0 ; i < arr.Count ; i++)
+                Console.WriteLine("a  " + arr[i]);
         }
-    }
-    class Neuron{
-        private float limiar;
-        private float output;
-        private List<float>  weightVector = new List<float>();
-        private List<float>  inputLayer = new List<float>();
-        float transferencyFunction(float input){
-            return input;
-        }
-
-        float process(){
-            for
-            return output;
-        }
-
     }
 }
