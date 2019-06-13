@@ -10,37 +10,35 @@ namespace FlappyBirdNeuralNetwork
         Layer next = null;
         List<float> output;
 
-        public Layer(Layer anterior, int size, Layer proxima, float limiar )
+        public Layer(int size, float limiar )
         {
             neuroniosList = new List<Neuron>();
-            this.previous = anterior;
-            this.next = proxima;
             for (int i = 0 ; i < size ; i++ )
-                neuroniosList.Add( new Neuron(limiar) );
+                neuroniosList.Add( new Neuron(limiar, this) );
 
         }
 
-        public Layer(int size, Layer proxima, float limiar)
-        {
-            neuroniosList = new List<Neuron>();
-            this.next = proxima;
-            for (int i = 0 ; i < size ; i++ )
-                neuroniosList.Add( new Neuron(limiar) );
-        }
-        
-        public Layer(Layer anterior, int size, float limiar )
-        {
-            neuroniosList = new List<Neuron>();
-            this.previous = anterior;
-            for (int i = 0 ; i < size ; i++ )
-                neuroniosList.Add( new Neuron(limiar) );
+        public float getPeso( int neuronOriginIndex , int neuronDestinyIndex ){
+            return this.neuroniosList[neuronDestinyIndex].getPeso(neuronOriginIndex);
         }
 
-        public List<float> process( List<float> input ){
-            for ( Neuron n in neuroniosList )
-                Console.Write("dasdf");
-                // n.addNeuron()
-            return this.output;
+        public void changePeso( int neuronOriginIndex , int neuronDestinyIndex , float novoPeso){
+            // this.neuroniosList[neuronDestinyIndex].getPeso(neuronOriginIndex);
+        }
+
+        public void setNext(Layer l){
+            this.next = l;
+        }
+        public void setPrevious(Layer l){
+            this.previous = l;
+        }
+
+        public void process(List<float> input){
+            // for(int i = 0; i < neuroniosList. ; )
+        }
+
+        public List<float> getOutput(){
+            return output;
         }
 
     }
