@@ -34,7 +34,9 @@ namespace FlappyBirdNeuralNetwork
         }
 
         public void process(List<float> input){
-            // for(int i = 0; i < neuroniosList. ; )
+            for(int i = 0; i < neuroniosList.Count ; i++){
+                
+            }
         }
 
         public List<float> getOutput(){
