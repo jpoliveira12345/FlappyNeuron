@@ -69,11 +69,26 @@ namespace FlappyBirdNeuralNetwork
             this.taxaAprendizado = t;
         }
 
-        public void resultadoNetwork(){
+        public void criaNetwork(){
+            Layer Lentrada = new Layer(3, 1);
+            Layer Loculta = new Layer(3, 1);
+            Layer Lsaida = new Layer(1, 1);
+
+            this.layerList.Add(Lentrada);
+            this.layerList.Add(Loculta);
+            this.layerList.Add(Lsaida);
 
         }
 
-        public void aprendizadoNetwork(){
+        public float resultadoNetwork(List<float> input){
+            float resultado = this.process(input);
+
+            return resultado;
+        }
+
+        public void aprendizadoNetwork(List<float> input, float taxaAprendizado){
+            this.backPropagationSaida(layerList[2], taxaAprendizado, input[4]);
+            this.backPropagationOculta(layerList[1], taxaAprendizado);
 
         }
 
