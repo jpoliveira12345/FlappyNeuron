@@ -4,7 +4,9 @@ using System.Collections.Generic;
 // using Neuron;
 namespace FlappyBirdNeuralNetwork{
     class Program{
-        static void Main(string[] args){
+        static void Main(string[] args){            
+            
+
 
         }
     }

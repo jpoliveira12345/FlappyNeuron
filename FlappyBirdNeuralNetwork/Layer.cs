@@ -23,7 +23,7 @@ namespace FlappyBirdNeuralNetwork
         }
 
         public void changePeso( int neuronOriginIndex , int neuronDestinyIndex , float novoPeso){
-            // this.neuroniosList[neuronDestinyIndex].getPeso(neuronOriginIndex);
+            this.neuroniosList[neuronDestinyIndex].setPeso(neuronDestinyIndex, novoPeso);
         }
 
         public void setNext(Layer l){
@@ -34,13 +34,49 @@ namespace FlappyBirdNeuralNetwork
         }
 
         public void process(List<float> input){
-            for(int i = 0; i < neuroniosList.Count ; i++){
-                
+            for(int i = 0; i < neuroniosList.Count; i++){
+                this.output.Add(neuroniosList[i].process());
             }
+        }
+
+        public void backPropagationOculta(float taxaAprendizado){
+            for(int i = 0; i < neuroniosList.Count; i++){
+				
+                neuroniosList[i].backPropagationOculta(taxaAprendizado);
+            }
+        }
+
+
+        public void backPropagationSaida(float taxaAprendizado, float desejado){
+
+            for(int i = 0; i < neuroniosList.Count; i++){
+               	neuroniosList[i].backPropagationSaida(taxaAprendizado, desejado);
+            }
+
+        }
+		
+		public float getSomatorios(int index){
+			float soma = 0;
+			foreach( Neuron n in this.neuroniosList ){
+				soma += n.getPeso(index);
+			}
+			return soma;
+		}
+		
+        public Layer getPrevious(){
+            return this.previous;
+        }
+
+        public Layer getNext(){
+            return this.next;
         }
 
         public List<float> getOutput(){
             return output;
+        }
+
+        public List<Neuron> getNeuroniosList(){
+            return neuroniosList;
         }
 
     }

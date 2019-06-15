@@ -10,6 +10,7 @@ namespace FlappyBirdNeuralNetwork
         private Layer inputLayer;
         private Layer outputLayer;
         private List<Layer> layerList;
+        private float taxaAprendizado;
 
         public Network(Layer inputLayer, Layer outputLayer, float limiar, int size)
         {
@@ -32,10 +33,6 @@ namespace FlappyBirdNeuralNetwork
             outputLayer.setPrevious(previousLayer);
             layerList.Add(outputLayer);
         }
-        float transferencyFunction(float input)
-        {
-            return input;
-        }
         public float getOutput(){
             return this.output;
         }
@@ -50,8 +47,35 @@ namespace FlappyBirdNeuralNetwork
                 l.process(input);
                 input = l.getOutput();
             }
-            return l.getOutput()[0];
+
+            return input[0];
 
         }
+
+
+        public void backPropagationSaida(Layer layer, float taxaAprendizado, float desejado){
+
+            layer.backPropagationSaida(taxaAprendizado, desejado);
+
+        }
+
+        public void backPropagationOculta(Layer layer, float taxaAprendizado){
+
+            layer.backPropagationOculta(taxaAprendizado);
+        }
+
+
+        public void setTaxaAprendizado(float t){
+            this.taxaAprendizado = t;
+        }
+
+        public void resultadoNetwork(){
+
+        }
+
+        public void aprendizadoNetwork(){
+
+        }
+
     }
 }
