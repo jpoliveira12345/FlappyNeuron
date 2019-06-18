@@ -7,31 +7,14 @@ namespace FlappyBirdNeuralNetwork
     {
         private float limiar;
         private float output;
-        private Layer inputLayer;
-        private Layer outputLayer;
         private List<Layer> layerList;
         private float taxaAprendizado;
 
-        public Network(Layer inputLayer, Layer outputLayer, float limiar, int size)
+        public Network(float limiar)
         {
             layerList = new List<Layer>();
-            Layer previousLayer = inputLayer;
-            layerList.Add(inputLayer);
-            Layer nextLayer;
             this.limiar = limiar;
-            this.inputLayer = inputLayer;
-            this.outputLayer = outputLayer;
-            for (int i = 0; i < size; i++)
-            {
-                nextLayer = new Layer(size, limiar);
-                previousLayer.setNext(nextLayer);
-                nextLayer.setPrevious(previousLayer);
-                layerList.Add(nextLayer);
-                previousLayer = nextLayer;
-            }
-            previousLayer.setNext(outputLayer);
-            outputLayer.setPrevious(previousLayer);
-            layerList.Add(outputLayer);
+            
         }
         public float getOutput(){
             return this.output;
@@ -43,7 +26,7 @@ namespace FlappyBirdNeuralNetwork
         }
 
         public float process(List<float> input){
-            foreach( Layer l in this.layerList ){
+            foreach(Layer l in layerList){
                 l.process(input);
                 input = l.getOutput();
             }
@@ -53,15 +36,15 @@ namespace FlappyBirdNeuralNetwork
         }
 
 
-        public void backPropagationSaida(Layer layer, float taxaAprendizado, float desejado){
+        public void backPropagationSaida(Layer layer, List<float> input, float taxaAprendizado){
 
-            layer.backPropagationSaida(taxaAprendizado, desejado);
+            layer.backPropagationSaida(input, taxaAprendizado,input[3]);
 
         }
 
-        public void backPropagationOculta(Layer layer, float taxaAprendizado){
+        public void backPropagationOculta(Layer layer, List<float> input, float taxaAprendizado){
 
-            layer.backPropagationOculta(taxaAprendizado);
+            layer.backPropagationOculta(input, taxaAprendizado);
         }
 
 
@@ -70,11 +53,11 @@ namespace FlappyBirdNeuralNetwork
         }
 
         public void criaNetwork(){
-            Layer Lentrada = new Layer(3, 1);
-            Layer Loculta = new Layer(3, 1);
-            Layer Lsaida = new Layer(1, 1);
+            Layer Loculta = new Layer(null, null, 3, 1, 3);
+            Layer Lsaida = new Layer(Loculta, null, 1, 1, 3);
 
-            this.layerList.Add(Lentrada);
+            Loculta.setNext(Lsaida);
+
             this.layerList.Add(Loculta);
             this.layerList.Add(Lsaida);
 
@@ -87,10 +70,15 @@ namespace FlappyBirdNeuralNetwork
         }
 
         public void aprendizadoNetwork(List<float> input, float taxaAprendizado){
-            this.backPropagationSaida(layerList[2], taxaAprendizado, input[4]);
-            this.backPropagationOculta(layerList[1], taxaAprendizado);
+            this.backPropagationSaida(layerList[1], input, taxaAprendizado);
+            this.backPropagationOculta(layerList[0], input, taxaAprendizado);
 
         }
 
+        public void getNeuronPesos(){
+            foreach(Layer l in layerList){
+                l.getNeuronPesos();
+            }
+        }
     }
 }

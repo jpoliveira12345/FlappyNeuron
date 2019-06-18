@@ -10,11 +10,16 @@ namespace FlappyBirdNeuralNetwork
         Layer next = null;
         List<float> output;
 
-        public Layer(int size, float limiar )
+        public Layer(Layer proximo, Layer anterior, int size, float limiar, int sizePrevious)
         {
             neuroniosList = new List<Neuron>();
+            
+
+            this.next = proximo;
+            this.previous = anterior;
+            
             for (int i = 0 ; i < size ; i++ )
-                neuroniosList.Add( new Neuron(limiar, this) );
+                neuroniosList.Add( new Neuron(limiar, this, sizePrevious) );
 
         }
 
@@ -34,23 +39,24 @@ namespace FlappyBirdNeuralNetwork
         }
 
         public void process(List<float> input){
+            this.output = new List<float>();
             for(int i = 0; i < neuroniosList.Count; i++){
-                this.output.Add(neuroniosList[i].process());
+                this.output.Add(neuroniosList[i].process(input));
             }
         }
 
-        public void backPropagationOculta(float taxaAprendizado){
+        public void backPropagationOculta(List<float> input, float taxaAprendizado){
             for(int i = 0; i < neuroniosList.Count; i++){
 				
-                neuroniosList[i].backPropagationOculta(taxaAprendizado);
+                neuroniosList[i].backPropagationOculta(input, taxaAprendizado);
             }
         }
 
 
-        public void backPropagationSaida(float taxaAprendizado, float desejado){
+        public void backPropagationSaida(List<float> input, float taxaAprendizado, float desejado){
 
             for(int i = 0; i < neuroniosList.Count; i++){
-               	neuroniosList[i].backPropagationSaida(taxaAprendizado, desejado);
+               	neuroniosList[i].backPropagationSaida(input, taxaAprendizado, desejado);
             }
 
         }
@@ -77,6 +83,12 @@ namespace FlappyBirdNeuralNetwork
 
         public List<Neuron> getNeuroniosList(){
             return neuroniosList;
+        }
+
+        public void getNeuronPesos(){
+            foreach(Neuron neuron in neuroniosList){
+                neuron.getNeuronPesos();
+            }
         }
 
     }
