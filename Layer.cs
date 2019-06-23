@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-// using Neuron;
 namespace FlappyBirdNeuralNetwork
 {
     class Layer
@@ -10,17 +9,16 @@ namespace FlappyBirdNeuralNetwork
         Layer next = null;
         List<float> output;
 
-        public Layer(Layer proximo, Layer anterior, int size, float limiar, int sizePrevious)
+        public Layer(Layer anterior, Layer proximo, int size, float limiar, int sizePrevious)
         {
             neuroniosList = new List<Neuron>();
-            
-
+            output = new List<float>();
             this.next = proximo;
             this.previous = anterior;
             
-            for (int i = 0 ; i < size ; i++ )
+            for (int i = 0 ; i < size ; i++ ){
                 neuroniosList.Add( new Neuron(limiar, this, sizePrevious) );
-
+            }
         }
 
         public float getPeso( int neuronOriginIndex , int neuronDestinyIndex ){
@@ -28,7 +26,7 @@ namespace FlappyBirdNeuralNetwork
         }
 
         public void changePeso( int neuronOriginIndex , int neuronDestinyIndex , float novoPeso){
-            this.neuroniosList[neuronDestinyIndex].setPeso(neuronDestinyIndex, novoPeso);
+            this.neuroniosList[neuronDestinyIndex].setPeso(neuronOriginIndex, novoPeso);
         }
 
         public void setNext(Layer l){
@@ -45,26 +43,23 @@ namespace FlappyBirdNeuralNetwork
             }
         }
 
-        public void backPropagationOculta(List<float> input, float taxaAprendizado){
+        public void backPropagationOculta(List<float> input, float taxaAprendizado, float desejado){
             for(int i = 0; i < neuroniosList.Count; i++){
-				
-                neuroniosList[i].backPropagationOculta(input, taxaAprendizado);
+                neuroniosList[i].backPropagationOculta(input, taxaAprendizado, desejado);
             }
         }
 
-
-        public void backPropagationSaida(List<float> input, float taxaAprendizado, float desejado){
+        public void backPropagationSaida(List<float> sinal, float taxaAprendizado, float desejado){
 
             for(int i = 0; i < neuroniosList.Count; i++){
-               	neuroniosList[i].backPropagationSaida(input, taxaAprendizado, desejado);
+               	neuroniosList[i].backPropagationSaida(sinal, taxaAprendizado, desejado);
             }
-
         }
 		
-		public float getSomatorios(int index){
+		public float getSomatorios(int index, float desejado){
 			float soma = 0;
 			foreach( Neuron n in this.neuroniosList ){
-				soma += n.getPeso(index);
+				soma += n.getPeso(index) * n.getGradienteSaida(n.getThisPesos(), desejado);
 			}
 			return soma;
 		}

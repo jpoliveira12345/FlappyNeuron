@@ -8,7 +8,6 @@ namespace FlappyBirdNeuralNetwork
     {
         private float limiar;
         private List<float> pesosList;
-
         private Layer camada;
 
         public Neuron(float limiar, Layer camada, int sizePrevious){
@@ -20,17 +19,14 @@ namespace FlappyBirdNeuralNetwork
                 pesosList.Add(RandomNumber(1));
             }
         }
+        public float RandomNumber(float max)  
+        {  
+            Random random = new Random(); 
 
+            double rand = random.NextDouble() * max;
 
-
-    public float RandomNumber(float max)  
-    {  
-        Random random = new Random(); 
-
-        double rand = random.NextDouble() * max;
-
-        return (float) rand;
-    }    
+            return (float) rand;
+        }    
 
         public float getPeso(int neuronIndex){
             return pesosList[neuronIndex];
@@ -59,79 +55,58 @@ namespace FlappyBirdNeuralNetwork
             return (float) y;
         }
 
-        public float getGradienteOculta(List<float> input){
+        public float getGradienteOculta(List<float> input, float desejado){
             
-            double gradiente = fTransicaoDerivada(fSoma(input)) * getSaidaPropagation(); 
+            float saida = this.camada.getNext().getSomatorios(this.getThisNeuronIndex(), desejado);
+
+            double gradiente = fTransicaoDerivada(fSoma(input)) * saida; 
 
             return (float) gradiente;
         }
 
-        public void backPropagationOculta(List<float> input, float taxaAprendizado){
+        public void backPropagationOculta(List<float> input, float taxaAprendizado, float desejado){
             //Para neuronios da camada oculta
             for(int i = 0; i < pesosList.Count; i++){
-                pesosList[i] += (-taxaAprendizado) * getGradienteOculta(input) * input[i];
+                pesosList[i] += (-taxaAprendizado) * getGradienteOculta(input, desejado) * input[i];
             }
         }
-
         
-        public float getErro(List<float> input, float desejado){
-            
-            //float erro = Desejado - Saida
-            float erro = desejado - this.process(input);
-
-            return erro;
-        }
-        
-
         public float getGradienteSaida(List<float> input, float desejado){
-            double gradiente = (- getErro(input, desejado)) * fTransicaoDerivada(fSoma(input));
+            double erro = desejado - fTransicao(fSoma(input));
+
+            double gradiente = (- erro ) * fTransicaoDerivada(fSoma(input));
             
             return (float) gradiente;
         }
 
-		public float getSaidaPropagation(){
-			
-			float saida = 0;
-			
-
-			saida = this.camada.getNext().getSomatorios(this.getThisNeuronIndex());
-
-			return saida;
-			
-
-		}
-
-        public void backPropagationSaida(List<float> input, float taxaAprendizado, float desejado){
-            //Para neuronios da camada de saida
-            for(int i = 0; i < pesosList.Count; i++){
-                pesosList[i] += (-taxaAprendizado) * getGradienteSaida(input, desejado) * input[i];
+        public List<float> getThisPesos(){
+            var output = new List<float>();
+            foreach(float peso in pesosList){
+                output.Add(peso);
             }
 
+            return output;
+        }
 
+        public void backPropagationSaida(List<float> sinal, float taxaAprendizado, float desejado){
+            //Para neuronios da camada de saida
+            //List<float> sinal = new List<float>();
+            //sinal = this.getThisPesos();
+            
+            for(int i = 0; i < pesosList.Count; i++){
+                pesosList[i] += (-taxaAprendizado) * getGradienteSaida(sinal, desejado) * sinal[i];
+            }
         }
 
         public double fTransicaoDerivada(float somaPonderada){
             var derivada = 1/(1 + Math.Pow(Math.E, somaPonderada));
             var y = (derivada * (1 - derivada));
-            /* 
-            if(y >= 0){
-                return 1f;
-            }else{
-                return 0f;
-            }
-            */
+            
             return y;
         }
+
         public double fTransicao(double somaPonderada){
             double y = 1/(1 + Math.Pow(Math.E, somaPonderada));
-            /* 
-            if(y >= 0){
-                return 1f;
-            }else{
-                return 0f;
-            }
-            */
-
             return y;
         }
 
