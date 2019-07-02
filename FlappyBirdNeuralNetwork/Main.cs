@@ -18,12 +18,15 @@ namespace FlappyBirdNeuralNetwork
 
             // Criando a rede
             float taxaAprendizado = 0.5f;
-            Network network = new Network(4,3,6,1);
-            Console.WriteLine(network.ToString());
+            Network network = new Network(3,3,6,1);
+            network.aprendizadoNetwork(input, taxaAprendizado);
+            new Network(network.ToString());
+
+
+
             // network.criaNetwork();
 
-            network.aprendizadoNetwork(input, taxaAprendizado);
-            Console.WriteLine("First: \n" + network.resultadoNetwork(input));
+            // Console.WriteLine("First: \n" + network.resultadoNetwork(input));
             //network.getNeuronPesos();
 
             // for (int i = 0; i < 100; i++)

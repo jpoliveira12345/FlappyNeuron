@@ -1,0 +1,11 @@
+C:\Users\Gabriel P H\Downloads\VersãoJP1\FlappyNeuron-master\FlappyBirdNeuralNetwork\bin\Debug\netcoreapp2.2\FlappyBirdNeuralNetwork.deps.json
+C:\Users\Gabriel P H\Downloads\VersãoJP1\FlappyNeuron-master\FlappyBirdNeuralNetwork\bin\Debug\netcoreapp2.2\FlappyBirdNeuralNetwork.runtimeconfig.json
+C:\Users\Gabriel P H\Downloads\VersãoJP1\FlappyNeuron-master\FlappyBirdNeuralNetwork\bin\Debug\netcoreapp2.2\FlappyBirdNeuralNetwork.runtimeconfig.dev.json
+C:\Users\Gabriel P H\Downloads\VersãoJP1\FlappyNeuron-master\FlappyBirdNeuralNetwork\bin\Debug\netcoreapp2.2\FlappyBirdNeuralNetwork.dll
+C:\Users\Gabriel P H\Downloads\VersãoJP1\FlappyNeuron-master\FlappyBirdNeuralNetwork\bin\Debug\netcoreapp2.2\FlappyBirdNeuralNetwork.pdb
+C:\Users\Gabriel P H\Downloads\VersãoJP1\FlappyNeuron-master\FlappyBirdNeuralNetwork\obj\Debug\netcoreapp2.2\FlappyBirdNeuralNetwork.csprojAssemblyReference.cache
+C:\Users\Gabriel P H\Downloads\VersãoJP1\FlappyNeuron-master\FlappyBirdNeuralNetwork\obj\Debug\netcoreapp2.2\FlappyBirdNeuralNetwork.csproj.CoreCompileInputs.cache
+C:\Users\Gabriel P H\Downloads\VersãoJP1\FlappyNeuron-master\FlappyBirdNeuralNetwork\obj\Debug\netcoreapp2.2\FlappyBirdNeuralNetwork.AssemblyInfoInputs.cache
+C:\Users\Gabriel P H\Downloads\VersãoJP1\FlappyNeuron-master\FlappyBirdNeuralNetwork\obj\Debug\netcoreapp2.2\FlappyBirdNeuralNetwork.AssemblyInfo.cs
+C:\Users\Gabriel P H\Downloads\VersãoJP1\FlappyNeuron-master\FlappyBirdNeuralNetwork\obj\Debug\netcoreapp2.2\FlappyBirdNeuralNetwork.dll
+C:\Users\Gabriel P H\Downloads\VersãoJP1\FlappyNeuron-master\FlappyBirdNeuralNetwork\obj\Debug\netcoreapp2.2\FlappyBirdNeuralNetwork.pdb

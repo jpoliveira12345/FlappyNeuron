@@ -11,8 +11,7 @@ namespace FlappyBirdNeuralNetwork
         public Network(int inputSize, int nCamadasOcultas, int nNeuroniosOculta, int sizeSaida)
         {
             this.layerList = new List<Layer>();
-            Layer camada = new Layer(inputSize, nNeuroniosOculta);
-            this.layerList.Add(camada);
+            Layer camada;
             for (int i = 0; i < nNeuroniosOculta; i++)
             {
                 if (i == 0)
@@ -54,13 +53,18 @@ namespace FlappyBirdNeuralNetwork
 
         public Network(string str)
         {
+            Layer camada;
+            this.layerList = new List<Layer>();
             string[] layers = str.Split("\n\n");
-            foreach (string s in layers)
+            foreach( string s in layers )
             {
                 if (s.Length <= 0)
                     continue;
-                new Layer(s);
+                camada = new Layer(s);
+                this.layerList.Add(camada);
             }
+            this.ajustaNextAndPrevious();
+
         }
         public float resultadoNetwork(List<float> input)
         {
@@ -94,11 +98,21 @@ namespace FlappyBirdNeuralNetwork
 
         public void aprendizadoNetwork(List<float> input, float taxaAprendizado)
         {
-            layerList[0].process(input);
-            layerList[1].process(layerList[0].getOutput());
-            this.backPropagationSaida(layerList[2], layerList[1].getOutput(), taxaAprendizado);
-            this.backPropagationOculta(layerList[1], layerList[0].getOutput(), taxaAprendizado);
-            this.backPropagationOculta(layerList[0], input, taxaAprendizado);
+          List<float> entrada = input;
+          for ( int i = 0  ; i < this.getSize(); i++ ){
+            layerList[i].process(entrada);
+            entrada = layerList[i].getOutput();
+          }
+
+          this.backPropagationSaida(layerList[this.getSize() - 1], layerList[this.getSize() - 2].getOutput(), taxaAprendizado);
+
+          for ( int i = this.getSize() - 2  ; i > 0 ; i-- ){
+            if ( i == 0 )
+              this.backPropagationOculta(layerList[i], input, taxaAprendizado);
+            else
+              this.backPropagationOculta(layerList[i], layerList[i-1].getOutput(), taxaAprendizado);
+          }
+            
         }
 
         public void getNeuronPesos()
