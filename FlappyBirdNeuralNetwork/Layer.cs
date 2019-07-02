@@ -16,21 +16,19 @@ namespace FlappyBirdNeuralNetwork
             output = new List<float>();
 
             for (int i = 0; i < size; i++)
-            {
                 neuroniosList.Add(new Neuron(this, sizePrevious));
-            }
         }
 
         public Layer(string str)
         {
             string[] neurons = str.Split("\n");
+            neuroniosList = new List<Neuron>();
+            output = new List<float>();
             foreach (string s in neurons)
             {
                 if (s.Length <= 0)
                     continue;
-                Console.Write(s);
-                Console.Write("\n---\n");
-                new Neuron(this, s.Remove(0, 2));
+                neuroniosList.Add(new Neuron(this, s.Remove(0, 2)));
             }
         }
 

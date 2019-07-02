@@ -16,9 +16,7 @@ namespace FlappyBirdNeuralNetwork
             pesosList = new List<float>();
 
             for (int i = 0; i < sizePrevious; i++)
-            {
                 pesosList.Add(RandomNumber(1));
-            }
         }
 
         public Neuron(Layer camada, string str)
@@ -26,9 +24,8 @@ namespace FlappyBirdNeuralNetwork
             this.camada = camada;
             pesosList = new List<float>();
             string[] pesos = str.Split(",");
-            foreach( string s in pesos ){
+            foreach (string s in pesos)
                 pesosList.Add(float.Parse(s));
-            }
         }
 
         public float RandomNumber(float max)
