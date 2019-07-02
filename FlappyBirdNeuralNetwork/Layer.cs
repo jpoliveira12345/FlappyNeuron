@@ -10,15 +10,27 @@ namespace FlappyBirdNeuralNetwork
         Layer next = null;
         List<float> output;
 
-        public Layer(Layer anterior, int sizePrevious, int size)
+        public Layer(int sizePrevious, int size)
         {
             neuroniosList = new List<Neuron>();
             output = new List<float>();
-            this.previous = anterior;
 
             for (int i = 0; i < size; i++)
             {
-                neuroniosList.Add(new Neuron( this, sizePrevious));
+                neuroniosList.Add(new Neuron(this, sizePrevious));
+            }
+        }
+
+        public Layer(string str)
+        {
+            string[] neurons = str.Split("\n");
+            foreach (string s in neurons)
+            {
+                if (s.Length <= 0)
+                    continue;
+                Console.Write(s);
+                Console.Write("\n---\n");
+                new Neuron(this, s.Remove(0, 2));
             }
         }
 
@@ -81,6 +93,10 @@ namespace FlappyBirdNeuralNetwork
         {
             return this.previous;
         }
+        public int getSize()
+        {
+            return this.neuroniosList.Count;
+        }
 
         public Layer getNext()
         {
@@ -108,12 +124,14 @@ namespace FlappyBirdNeuralNetwork
         public override string ToString()
         {
             StringBuilder s = new StringBuilder();
-            s.Append("L").Append("\n");
-            for (int i = 0; i < (neuroniosList.Count) ; i++)
+            // s.Append("L").Append("\n");
+            for (int i = 0; i < (neuroniosList.Count); i++)
             {
-                s.Append("\tN");
+                s.Append("N ");
                 s.Append(neuroniosList[i].ToString());
+                s.Append("\n");
             }
+            s.Append("\n");
             return s.ToString();
         }
 

@@ -20,6 +20,17 @@ namespace FlappyBirdNeuralNetwork
                 pesosList.Add(RandomNumber(1));
             }
         }
+
+        public Neuron(Layer camada, string str)
+        {
+            this.camada = camada;
+            pesosList = new List<float>();
+            string[] pesos = str.Split(",");
+            foreach( string s in pesos ){
+                pesosList.Add(float.Parse(s));
+            }
+        }
+
         public float RandomNumber(float max)
         {
             Random random = new Random();
@@ -138,14 +149,12 @@ namespace FlappyBirdNeuralNetwork
         public override string ToString()
         {
             StringBuilder s = new StringBuilder();
-            s.Append("[");
             foreach (float i in pesosList)
             {
                 s.Append(i.ToString());
                 s.Append(",");
             }
             s.Remove(s.Length - 1, 1);
-            s.Append("]\n");
             return s.ToString();
         }
     }
