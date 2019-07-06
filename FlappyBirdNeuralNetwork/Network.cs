@@ -1,153 +1,166 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-namespace FlappyBirdNeuralNetwork
+
+namespace RNA
 {
-    class Network
+    public class Network
     {
-        private List<Layer> layerList;
-        private float taxaAprendizado;
+        List<Layer> layerList; //Lista de Layers
+        List<float> output; //Lista de Saidas
 
-        public Network(int inputSize, int nCamadasOcultas, int nNeuroniosOculta, int sizeSaida)
+        public Network(int nEntradas, int nSaidas, int nLayersOcultas, int nNeuroniosOculta)
         {
-            this.layerList = new List<Layer>();
-            Layer camada;
-            for (int i = 0; i < nNeuroniosOculta; i++)
+            //Instancia Listas
+            layerList = new List<Layer>();
+            output = new List<float>();
+
+            for (int i = 0; i <= nLayersOcultas; i++)
             {
-                if (i == 0)
-                    camada = new Layer(inputSize, nNeuroniosOculta);
+                if (i == 0 && nLayersOcultas >= 1)
+                {
+                    //Cria 1ª camada Oculta
+                    layerList.Add(new Layer(nEntradas, nNeuroniosOculta));
+                }
+                else if (i == nLayersOcultas)
+                {
+                    //Cria camada de Saida
+                    layerList.Add(new Layer(nNeuroniosOculta, nSaidas));
+                }
                 else
-                    camada = new Layer(nNeuroniosOculta, nNeuroniosOculta);
-                this.layerList.Add(camada);
-            }
-            camada = new Layer(nNeuroniosOculta, sizeSaida);
-            this.layerList.Add(camada);
-            this.ajustaNextAndPrevious();
-        }
-
-        private void ajustaNextAndPrevious()
-        {
-            for (int i = 0; i < layerList.Count; i++)
-            {
-                if (i < layerList.Count - 1)
-                    layerList[i].setNext(layerList[i + 1]);
-                if (i > 0)
-                    layerList[i].setPrevious(layerList[i - 1]);
+                {
+                    //Cria as outras camadas Ocultas
+                    layerList.Add(new Layer(nNeuroniosOculta, nNeuroniosOculta));
+                }
             }
         }
 
-        // public void criaNetwork()
-        // {
-        //     Layer Loculta = new Layer(null, 3, 6);
-        //     Layer Loculta2 = new Layer(Loculta, 6, 6);
-        //     Layer Lsaida = new Layer(Loculta2, 6, 1);
-
-        //     Loculta.setNext(Loculta2);
-        //     Loculta2.setNext(Lsaida);
-
-        //     this.layerList.Add(Loculta);
-        //     this.layerList.Add(Loculta2);
-        //     this.layerList.Add(Lsaida);
-
-        // }
-
-        public Network(string str)
+        public void process(List<float> input)
         {
-            Layer camada;
-            this.layerList = new List<Layer>();
-            string[] layers = str.Split("\n\n");
-            foreach( string s in layers )
-            {
-                if (s.Length <= 0)
-                    continue;
-                camada = new Layer(s);
-                this.layerList.Add(camada);
-            }
-            this.ajustaNextAndPrevious();
-
-        }
-        public float resultadoNetwork(List<float> input)
-        {
-            float resultado = this.process(input);
-
-            return resultado;
-        }
-
-        public float process(List<float> input)
-        {
+            List<float> entrada = input;
             foreach (Layer l in layerList)
             {
-                l.process(input);
-                input = l.getOutput();
+                l.process(entrada);
+                entrada = l.getOutput();
             }
-            return input[0];
+
+            output = entrada;
         }
 
-
-        public void backPropagationSaida(Layer layer, List<float> input, float taxaAprendizado)
+        //Erro usado para atualizar a camada de Saida
+        public void backPropagation(List<float> input, List<float> desejado, float taxaAprendizagem)
         {
-            layer.backPropagationSaida(input, taxaAprendizado, input[3]);
-        }
 
-        public void backPropagationOculta(Layer layer, List<float> input, float taxaAprendizado)
-        {
-            layer.backPropagationOculta(input, taxaAprendizado, input[3]);
-        }
+            //Predict ou Output ou Process da rede
+            this.process(input);
+            List<float> actualOutput = this.getOutput();
 
+            //Gradientes
+            List<float> gradienteSaida = new List<float>();
+            List<float> gradienteOculta = new List<float>();
 
-
-        public void aprendizadoNetwork(List<float> input, float taxaAprendizado)
-        {
-          List<float> entrada = input;
-          for ( int i = 0  ; i < this.getSize(); i++ ){
-            layerList[i].process(entrada);
-            entrada = layerList[i].getOutput();
-          }
-
-          this.backPropagationSaida(layerList[this.getSize() - 1], layerList[this.getSize() - 2].getOutput(), taxaAprendizado);
-
-          for ( int i = this.getSize() - 2  ; i > 0 ; i-- ){
-            if ( i == 0 )
-              this.backPropagationOculta(layerList[i], input, taxaAprendizado);
-            else
-              this.backPropagationOculta(layerList[i], layerList[i-1].getOutput(), taxaAprendizado);
-          }
-            
-        }
-
-        public void getNeuronPesos()
-        {
-            foreach (Layer l in layerList)
+            for (int i = (layerList.Count - 1); i >= 0; i--)
             {
-                l.getNeuronPesos();
+                //Conta os indices dos neuronios
+                int count = 0;
+
+                if (i == (layerList.Count - 1))
+                {
+                    //BackPropagation na camada de Saida
+                    foreach (Neuron n in layerList[i].getNeuronList())
+                    {
+                        //Output da Layer Anterior
+                        List<float> previousLayerOutput = new List<float>();
+                        //Se não for a primeira camada, pega o anterior
+                        if (i != 0)
+                        {
+                            previousLayerOutput = layerList[i - 1].getOutput();
+                        }
+                        else //Se for a primeira camada e não tem anterior, o anterior é o input
+                        {
+                            previousLayerOutput = input;
+                        }
+                        //Faz a saida do Output da Layer anterior
+                        float saida = n.fSoma(previousLayerOutput);
+                        //Acha o gradiente de Saida
+                        gradienteSaida.Add((desejado[count] - actualOutput[count]) * n.sigmoideDerivada(saida));
+                        //Atualiza pesos Neuronio
+                        n.atualizaWeight(gradienteSaida[count], previousLayerOutput, taxaAprendizagem);
+                        //Atualiza o contador
+                        count++;
+                    }
+                }
+                else if (i == (layerList.Count - 2))
+                {
+                    //BackPropagation nas camadas Ocultas que são antes das de entrada
+                    foreach (Neuron n in layerList[i].getNeuronList())
+                    {
+                        //Output da Layer Anterior
+                        List<float> previousLayerOutput = new List<float>();
+                        //Se não for a primeira camada, pega o anterior
+                        if (i != 0)
+                        {
+                            previousLayerOutput = layerList[i - 1].getOutput();
+                        }
+                        else //Se for a primeira camada e não tem anterior, o anterior é o input
+                        {
+                            previousLayerOutput = input;
+                        }
+                        //Faz a saida do Output da Layer anterior
+                        float saida = n.fSoma(previousLayerOutput);
+                        //Inicializa o somador dos gradientes de Saida
+                        float sumGradienteSaida = 0f;
+                        //Soma os gradientes de Saida 
+                        for (int j = 0; j < layerList[i + 1].getNeuronList().Count; j++)
+                        {
+                            sumGradienteSaida += gradienteSaida[j] * layerList[i + 1].getNeuronList()[j].getWeight()[count];
+                        }
+                        //Acha o gradiente Oculto
+                        gradienteOculta.Add(n.sigmoideDerivada(saida) * sumGradienteSaida);
+                        //Atualiza pesos Neuronio
+                        n.atualizaWeight(gradienteOculta[count], previousLayerOutput, taxaAprendizagem);
+                        //Atualiza o contador
+                        count++;
+                    }
+                }
+                else
+                {
+                    //BackPropagation nas Camadas Ocultas seguintes
+                    foreach (Neuron n in layerList[i].getNeuronList())
+                    {
+                        //Output da Layer Anterior
+                        List<float> previousLayerOutput = new List<float>();
+                        //Se não for a primeira camada, pega o anterior
+                        if (i != 0)
+                        {
+                            previousLayerOutput = layerList[i - 1].getOutput();
+                        }
+                        else //Se for a primeira camada e não tem anterior, o anterior é o input
+                        {
+                            previousLayerOutput = input;
+                        }
+                        //Faz a soma do Output da Layer anterior
+                        float saida = n.fSoma(previousLayerOutput);
+                        //Inicializa o somador dos gradientes da camada Oculta
+                        float sumGradienteOculta = 0f;
+                        //Soma os gradientes da camada oculta
+                        for (int j = 0; j < layerList[i + 1].getNeuronList().Count; j++)
+                        {
+                            sumGradienteOculta += gradienteOculta[j] * layerList[i + 1].getNeuronList()[j].getWeight()[count];
+                        }
+                        //Acha o gradiente Oculto
+                        gradienteOculta[count] = (n.sigmoideDerivada(saida) * sumGradienteOculta);
+                        //Atualiza pesos Neuronio
+                        n.atualizaWeight(gradienteOculta[count], previousLayerOutput, taxaAprendizagem);
+                        //Atualiza o contador
+                        count++;
+                    }
+                }
             }
         }
 
-        public void setLayer(Layer l)
+        public List<float> getOutput()
         {
-            this.layerList.Add(l);
-        }
-        public int getSize()
-        {
-            return this.layerList.Count;
-        }
-        public float getPeso(int layerIndex, int neuronOriginIndex, int neuronDestinyIndex)
-        {
-            return this.layerList[layerIndex].getPeso(neuronOriginIndex, neuronDestinyIndex);
-        }
-        public void setTaxaAprendizado(float t)
-        {
-            this.taxaAprendizado = t;
-        }
-        public override string ToString()
-        {
-            StringBuilder s = new StringBuilder();
-            foreach (Layer l in layerList)
-            {
-                s.Append(l.ToString());
-            }
-            s.Remove(s.Length - 2, 2);
-            return s.ToString();
+            return this.output;
         }
 
 

@@ -1,30 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Gabriel P H\\Downloads\\VersãoJP1\\FlappyNeuron-master\\FlappyBirdNeuralNetwork\\FlappyBirdNeuralNetwork.csproj": {}
+    "/home/jpveira/Documents/UFU/FlappyNeuron/FlappyBirdNeuralNetwork/FlappyBirdNeuralNetwork.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Gabriel P H\\Downloads\\VersãoJP1\\FlappyNeuron-master\\FlappyBirdNeuralNetwork\\FlappyBirdNeuralNetwork.csproj": {
+    "/home/jpveira/Documents/UFU/FlappyNeuron/FlappyBirdNeuralNetwork/FlappyBirdNeuralNetwork.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Gabriel P H\\Downloads\\VersãoJP1\\FlappyNeuron-master\\FlappyBirdNeuralNetwork\\FlappyBirdNeuralNetwork.csproj",
+        "projectUniqueName": "/home/jpveira/Documents/UFU/FlappyNeuron/FlappyBirdNeuralNetwork/FlappyBirdNeuralNetwork.csproj",
         "projectName": "FlappyBirdNeuralNetwork",
-        "projectPath": "C:\\Users\\Gabriel P H\\Downloads\\VersãoJP1\\FlappyNeuron-master\\FlappyBirdNeuralNetwork\\FlappyBirdNeuralNetwork.csproj",
-        "packagesPath": "C:\\Users\\Gabriel P H\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Gabriel P H\\Downloads\\VersãoJP1\\FlappyNeuron-master\\FlappyBirdNeuralNetwork\\obj\\",
+        "projectPath": "/home/jpveira/Documents/UFU/FlappyNeuron/FlappyBirdNeuralNetwork/FlappyBirdNeuralNetwork.csproj",
+        "packagesPath": "/home/jpveira/.nuget/packages/",
+        "outputPath": "/home/jpveira/Documents/UFU/FlappyNeuron/FlappyBirdNeuralNetwork/obj/",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\Gabriel P H\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/jpveira/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp2.2"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

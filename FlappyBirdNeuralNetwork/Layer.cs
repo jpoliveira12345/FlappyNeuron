@@ -1,136 +1,43 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-namespace FlappyBirdNeuralNetwork
+
+namespace RNA
 {
-    class Layer
+    public class Layer
     {
-        List<Neuron> neuroniosList;
-        Layer previous = null;
-        Layer next = null;
-        List<float> output;
+        List<Neuron> neuronsList; //Lista de Neurinios
+        List<float> output; //Lista de Saida dos Neuronios
 
-        public Layer(int sizePrevious, int size)
+        public Layer(int nPreviousLayer, int nNeuroniosLayer)
         {
-            neuroniosList = new List<Neuron>();
+            //Instancia Listas
+            neuronsList = new List<Neuron>();
             output = new List<float>();
 
-            for (int i = 0; i < size; i++)
-                neuroniosList.Add(new Neuron(this, sizePrevious));
-        }
-
-        public Layer(string str)
-        {
-            string[] neurons = str.Split("\n");
-            neuroniosList = new List<Neuron>();
-            output = new List<float>();
-            foreach (string s in neurons)
+            //Cria os Neuronios
+            for (int i = 0; i < nNeuroniosLayer; i++)
             {
-                if (s.Length <= 0)
-                    continue;
-                neuroniosList.Add(new Neuron(this, s.Remove(0, 2)));
+                neuronsList.Add(new Neuron(nPreviousLayer, nNeuroniosLayer));
             }
         }
 
-        public float getPeso(int neuronOriginIndex, int neuronDestinyIndex)
-        {
-            return this.neuroniosList[neuronDestinyIndex].getPeso(neuronOriginIndex);
-        }
-
-        public void changePeso(int neuronOriginIndex, int neuronDestinyIndex, float novoPeso)
-        {
-            this.neuroniosList[neuronDestinyIndex].setPeso(neuronOriginIndex, novoPeso);
-        }
-
-        public void setNext(Layer l)
-        {
-            this.next = l;
-        }
-        public void setPrevious(Layer l)
-        {
-            this.previous = l;
-        }
-
+        //Chama o process() dos Neuronios e guarda no Output
         public void process(List<float> input)
         {
-            this.output = new List<float>();
-            for (int i = 0; i < neuroniosList.Count; i++)
+            output = new List<float>();
+            foreach (Neuron n in neuronsList)
             {
-                this.output.Add(neuroniosList[i].process(input));
+                n.process(input);
+                output.Add(n.getOutput());
             }
         }
-
-        public void backPropagationOculta(List<float> input, float taxaAprendizado, float desejado)
-        {
-            for (int i = 0; i < neuroniosList.Count; i++)
-            {
-                neuroniosList[i].backPropagationOculta(input, taxaAprendizado, desejado);
-            }
-        }
-
-        public void backPropagationSaida(List<float> sinal, float taxaAprendizado, float desejado)
-        {
-
-            for (int i = 0; i < neuroniosList.Count; i++)
-            {
-                neuroniosList[i].backPropagationSaida(sinal, taxaAprendizado, desejado);
-            }
-        }
-
-        public float getSomatorios(int index, float desejado)
-        {
-            float soma = 0;
-            foreach (Neuron n in this.neuroniosList)
-            {
-                soma += n.getPeso(index) * n.getGradienteSaida(n.getThisPesos(), desejado);
-            }
-            return soma;
-        }
-
-        public Layer getPrevious()
-        {
-            return this.previous;
-        }
-        public int getSize()
-        {
-            return this.neuroniosList.Count;
-        }
-
-        public Layer getNext()
-        {
-            return this.next;
-        }
-
         public List<float> getOutput()
         {
-            return output;
+            return this.output;
         }
-
-        public List<Neuron> getNeuroniosList()
+        public List<Neuron> getNeuronList()
         {
-            return neuroniosList;
-        }
-
-        public void getNeuronPesos()
-        {
-            foreach (Neuron neuron in neuroniosList)
-            {
-                neuron.getNeuronPesos();
-            }
-        }
-
-        public override string ToString()
-        {
-            StringBuilder s = new StringBuilder();
-            // s.Append("L").Append("\n");
-            for (int i = 0; i < (neuroniosList.Count); i++)
-            {
-                s.Append("N ");
-                s.Append(neuroniosList[i].ToString());
-                s.Append("\n");
-            }
-            s.Append("\n");
-            return s.ToString();
+            return neuronsList;
         }
 
     }

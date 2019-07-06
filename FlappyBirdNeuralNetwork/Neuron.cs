@@ -1,158 +1,96 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
-namespace FlappyBirdNeuralNetwork
+namespace RNA
 {
-    class Neuron
+    public class Neuron
     {
-        private List<float> pesosList;
-        private Layer camada;
+        List<float> weight; //Pesos W
+        float output; //Saidas Y
+        float maxRand;
+        float minRand;
 
-        public Neuron(Layer camada, int sizePrevious)
+        //Recebe as entradas e atribui elas ao Neuronio
+        public Neuron(int nPreviousLayer, int nNeuroniosLayer)
         {
-            this.camada = camada;
-            pesosList = new List<float>();
-
-            for (int i = 0; i < sizePrevious; i++)
-                pesosList.Add(RandomNumber(1));
-        }
-
-        public Neuron(Layer camada, string str)
-        {
-            this.camada = camada;
-            pesosList = new List<float>();
-            string[] pesos = str.Split(",");
-            foreach (string s in pesos)
-                pesosList.Add(float.Parse(s));
-        }
-
-        public float RandomNumber(float max)
-        {
+            //Inicializa Random
             Random random = new Random();
+            this.maxRand = 1f;
+            this.minRand = 0f;
 
-            double rand = random.NextDouble() * max;
+            //Inicializa Listas
+            this.weight = new List<float>();
+            this.output = 0f;
 
-            return (float)rand;
+            //Inicializa com pesos aleatorios entre 0 e 1
+            for (int i = 0; i < nPreviousLayer; i++)
+            {
+                weight.Add((float)random.NextDouble() * randomRange());
+            }
         }
 
-        public float getPeso(int neuronIndex)
+        public float randomRange(){
+            return (this.maxRand - this.minRand) + this.minRand;
+        }
+
+        //Realiza todo processo interno do neuronio
+        public void process(List<float> input)
         {
-            return pesosList[neuronIndex];
+            //Calcula a saida
+            float saida = fSoma(input);
+            //Atribui a saida
+            this.output = saida;
         }
-
-        public void setPeso(int neuronIndex, float novoPeso)
-        {
-            pesosList[neuronIndex] = novoPeso;
-        }
-
-        public int getThisNeuronIndex()
-        {
-            int index = this.camada.getNeuroniosList().IndexOf(this);
-            return index;
-        }
-
         public float fSoma(List<float> input)
         {
-            float output = 0;
-            for (int i = 0; i < pesosList.Count; i++)
+            float soma = 0f;
+
+            //Calcula o somatorio
+            for (int i = 0; i < weight.Count; i++)
             {
-                output += pesosList[i] * input[i];
+                soma += weight[i] * input[i];
+                //Printa pesos dos neuronios
+                //Console.WriteLine("Peso: " + i + " Valor: " + weight[i]);
             }
-            return output;
+            return sigmoide(soma);
         }
-
-        public float process(List<float> input)
+        //Atualiza, diante dos paramentros, os seus pesos
+        public void atualizaWeight(float gradiente, List<float> input, float taxaAprendizagem)
         {
-            double y = fSoma(input);
-            y = fTransicao(y);
-            return (float)y;
-        }
-
-        public float getGradienteOculta(List<float> input, float desejado)
-        {
-
-            float saida = this.camada.getNext().getSomatorios(this.getThisNeuronIndex(), desejado);
-
-            double gradiente = fTransicaoDerivada(fSoma(input)) * saida;
-
-            return (float)gradiente;
-        }
-
-        public void backPropagationOculta(List<float> input, float taxaAprendizado, float desejado)
-        {
-            //Para neuronios da camada oculta
-            for (int i = 0; i < pesosList.Count; i++)
+            for (int i = 0; i < weight.Count; i++)
             {
-                pesosList[i] += (-taxaAprendizado) * getGradienteOculta(input, desejado) * input[i];
+                weight[i] += (taxaAprendizagem) * gradiente * input[i];
             }
         }
-
-        public float getGradienteSaida(List<float> input, float desejado)
+        public List<float> getWeight()
         {
-            double erro = desejado - fTransicao(fSoma(input));
-
-            double gradiente = (-erro) * fTransicaoDerivada(fSoma(input));
-
-            return (float)gradiente;
+            return this.weight;
+        }
+        //Retorna o Output do Neuronio
+        public float getOutput()
+        {
+            return this.output;
+        }
+        //Função Sigmoide
+        public float sigmoide(float soma)
+        {
+            return (float)(1 / (1 + Math.Exp(-soma)));
+        }
+        //Derivada da Função Sigmoide
+        public float sigmoideDerivada(float soma)
+        {
+            return (float)(soma * (1 - soma));
+        }
+        public float reLU(float soma)
+        {
+            return (float)(Math.Max(0, soma));
+        }
+        public float reLUDerivada(float soma)
+        {
+            return (float)(soma >= 0 ? 1 : 0);
         }
 
-        public List<float> getThisPesos()
-        {
-            var output = new List<float>();
-            foreach (float peso in pesosList)
-            {
-                output.Add(peso);
-            }
 
-            return output;
-        }
 
-        public void backPropagationSaida(List<float> sinal, float taxaAprendizado, float desejado)
-        {
-            //Para neuronios da camada de saida
-            //List<float> sinal = new List<float>();
-            //sinal = this.getThisPesos();
-
-            for (int i = 0; i < pesosList.Count; i++)
-            {
-                pesosList[i] += (-taxaAprendizado) * getGradienteSaida(sinal, desejado) * sinal[i];
-            }
-        }
-
-        public double fTransicaoDerivada(float somaPonderada)
-        {
-            var derivada = 1 / (1 + Math.Pow(Math.E, somaPonderada));
-            var y = (derivada * (1 - derivada));
-
-            return y;
-        }
-
-        public double fTransicao(double somaPonderada)
-        {
-            double y = 1 / (1 + Math.Pow(Math.E, somaPonderada));
-            return y;
-        }
-
-        public void getNeuronPesos()
-        {
-            foreach (float i in pesosList)
-            {
-                Console.WriteLine("Index: " + getThisNeuronIndex());
-                Console.WriteLine(i);
-            }
-        }
-        public override string ToString()
-        {
-            StringBuilder s = new StringBuilder();
-            foreach (float i in pesosList)
-            {
-                s.Append(i.ToString());
-                s.Append(",");
-            }
-            s.Remove(s.Length - 1, 1);
-            return s.ToString();
-        }
     }
 }
